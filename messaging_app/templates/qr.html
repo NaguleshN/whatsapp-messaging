@@ -1,0 +1,45 @@
+{% comment %} 
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+</head>
+<div class="container mt-5">
+    <div class="row justify-content-end">
+      <h3 class="col-auto">
+        <a class="btn btn-outline-danger my-2 my-sm-0 mr-sm-2" href="{% url 'home' %}">X</a>
+      </div>
+    </h3>
+  </div> {% endcomment %}
+
+{% comment %} <head>
+    <meta http-equiv="refresh" content="20">
+</head> {% endcomment %}
+
+{{qr|safe}}
+{{instance_id}}
+<div class="container mt-5">
+    <div class="row justify-content-end">
+      <h3 class="col-auto">
+        <a class="btn btn-outline-danger my-2 my-sm-0 mr-sm-2" href="{% url 'home' %}">Continue</a>
+      </div>
+    </h3>
+  </div>
+
+
+<script>
+    setTimeout(function(){
+        window.location.href = "{% url 'generate_qr' instance_id %}"; // the redirect goes here
+    }, 120000); // 2 minutes, in milliseconds
+
+
+</script>

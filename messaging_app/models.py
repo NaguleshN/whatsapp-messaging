@@ -4,14 +4,14 @@ from django.contrib.auth.models import User
 
 class Instance(models.Model):
     user_id=models.ForeignKey(User, on_delete=models.CASCADE) 
-    instance_name = models.CharField(max_length=25)
-    instance_key = models.CharField(max_length=100)
+    instance_key = models.CharField(max_length=25)
+    instance_token = models.CharField(max_length=100)
     qrscanned=models.BooleanField(default=False)
     
     def __str__(self):  
-        return self.instance_name + " ("+self.user_id+")"
-        
-        
+        return self.instance_key
+
+
 class Message(models.Model):
     instance = models.ForeignKey(Instance, on_delete=models.CASCADE)
     phone_number=models.CharField(max_length=12)
