@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="d-flex justify-content-center align-items-center mt-5">
+        <form style="width: 26rem;" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% comment %} <div data-mdb-input-init class="form-outline mb-4">
+                <label class="form-label" for="form4Example1">Recipient Phone number</label>
+              <input type="number" id="form4Example1" class="form-control" name="phone"/>
+            </div> {% endcomment %}
+          
+            {% comment %} <div data-mdb-input-init class="form-outline mb-4">
+                <label class="form-label" for="form4Example2">message_context</label>
+              <input type="text" name="message" id="form4Example2" class="form-control" />
+            </div> {% endcomment %}
+          
+            <div data-mdb-input-init class="form-outline mb-4">
+              <label class="form-label" for="form4Example2">message_context</label>
+            <input type="file" name="message" id="form4Example2" class="form-control" accept=".xlsx, .xls" required/>
+          </div>
+
+            <div class="form-check d-flex justify-content-center mb-4">
+              
+            </div>
+          
+            <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block mb-4">Send</button>
+          </form>
+    </div>
+{% endblock %}

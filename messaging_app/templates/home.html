@@ -1,6 +1,18 @@
 {% extends 'base.html'%}
 {% block content %}
+{% for message in messages %}
+    {{ message }}
+    {% comment %} <div class="flex justify-between bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-2 py-2 shadow-md mb-5" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg>
+            </div>
+            <div class="" >{{ message }}</div>
+            
+        </div>
+    </div> {% endcomment %}
 
+{% endfor %}
     <div class="container bcontent mt-5">
       <h2>Instance</h2>
       <hr />
@@ -8,14 +20,14 @@
       <div class="card" style="width: 700px; margin-left:200px">
           <div class="row no-gutters">  
             <div class="card-body">
-              <h5 class="card-title">{{instance.user_id}}</h5>
-              <p class="card-text">{{instance.instance_key}}</p>
+              <h5 class="card-title">{{instance.instance_key}}</h5>
               <p class="card-text">{{instance.instance_token}}</p>
-              {% comment %} <form> {% endcomment %}
+              <p class="card-text">{{instance.user_id}}</p>
                 {% if not instance.qrscanned %}
               <a href="{% url 'generate_qr' instance.pk %}" class="btn btn-primary">generate Qr</a>
+              {% else %}
+              <a href="{% url 'messaging' instance.pk %}" class="btn btn-primary">Start messaging</a>
               {% endif %}
-                {% comment %} </form> {% endcomment %}
             </div>
           </div>
       </div>
