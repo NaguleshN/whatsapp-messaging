@@ -16,44 +16,53 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-
+    <style>
+        .navbar-brand {
+            color: white !important; /* Change the text color to white */
+            font-weight: bold; /* Add bold font weight */
+        }
+    
+        .navbar-nav .nav-link {
+            color: white !important; /* Change the text color to white */
+            font-weight: bold; /* Add bold font weight */
+        }
+    
+        .navbar-toggler-icon {
+            background-color: white; /* Change the color of the toggle icon */
+        }
+    
+        .navbar-light .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.1); /* Change the border color of the toggler */
+        }
+    
+        .navbar-light .navbar-toggler:hover,
+        .navbar-light .navbar-toggler:focus {
+            background-color: rgba(255, 255, 255, 0.1); /* Change the background color of the toggler on hover/focus */
+        }
+    
+        .navbar-collapse {
+            background-color: #343a40; /* Change the background color of the navbar collapse */
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">messaging app</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark" >
+        <a class="navbar-brand ml-5 mr-5 mt-1 mb-2 " href="#">MESSAGING APP</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
+    
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li> -->
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li> -->
-                <!-- <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li> -->
+                {% comment %} <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a></li> {% endcomment %}
             </ul>
             <form class="form-inline my-2 my-lg-0">
-                <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> -->
                 <a class="btn btn-outline-success my-2 my-sm-0 mr-sm-2" href="{% url 'create_instance' %}"> Create Instance </a>
+                <a class="btn btn-outline-danger my-2 my-sm-0 mr-sm-2" href="{% url 'delete_all_messages' %}"> Delete All Instance </a>
+                <a class="btn btn-outline-danger my-2 my-sm-0 mr-sm-2" href="{% url 'logout' %}"> Logout </a>
             </form>
         </div>
     </nav>
@@ -61,5 +70,7 @@
     {% endblock %}
     <div class="mt-5"></div>
 </body>
-
 </html>
+
+{% load sweetify %}
+{% sweetify %}

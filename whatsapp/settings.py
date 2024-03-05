@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'sweetify',
     'messaging_app',
 ]
 
@@ -128,3 +128,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='login'
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+# CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL  = '/media/'
+
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
+
+
+BASE_URL="http://10.1.76.125:7708"
+# BASE_URL="http://localhost:3333"

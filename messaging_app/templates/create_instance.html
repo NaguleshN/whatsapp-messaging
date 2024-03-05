@@ -29,13 +29,13 @@
         <form style="width: 26rem;" method="POST">
             {% csrf_token %}
             <div data-mdb-input-init class="form-outline mb-4">
-                <label class="form-label" for="form4Example1">Instance Name</label>
-              <input type="text" id="form4Example1" class="form-control" name="instance_name"/>
+                <label class="form-label" for="form4Example1">Instance Token</label>
+              <input type="text" id="form4Example1" class="form-control" name="instance_key"/>
             </div>
           
             <div data-mdb-input-init class="form-outline mb-4">
                 <label class="form-label" for="form4Example2">Instance Key</label>
-              <input type="text" name="instance_key" id="form4Example2" class="form-control" readonly value={{unique_key}} />
+              <input type="text" name="instance_name" id="form4Example2" class="form-control" readonly value={{unique_key}} />
             </div>
           
             <div class="form-check d-flex justify-content-center mb-4">

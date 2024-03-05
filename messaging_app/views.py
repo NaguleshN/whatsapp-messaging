@@ -10,7 +10,11 @@ import ssl
 import time
 from django.contrib import messages
 from openpyxl import load_workbook
-
+from whatsapp.settings import BASE_URL
+from django.http import HttpResponse, FileResponse
+from messaging_app.tasks import send_message,delete_all_messages
+import os
+from django.conf import settings
 
 def login(request):
     if request.method=="POST":
@@ -46,7 +50,7 @@ def create_instance(request):
         instance_token = request.POST.get('instance_key')
         print(instance_key,"  ",instance_token)
         try:
-            url=f"http://localhost:3333/instance/init?key={instance_key}&token={instance_token}"
+            url=BASE_URL+f"/instance/init?key={instance_key}&token={instance_token}"
             response = requests.get(url, verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
         except Exception as e:
             print(e)
@@ -69,13 +73,13 @@ def generate_qr(request,instance_id):
     instance=Instance.objects.get(id=instance_id)
     try:
         
-        init_url=f"http://localhost:3333/instance/init?key={instance.instance_key}&token={instance.instance_token}"
+        init_url=BASE_URL+f"/instance/init?key={instance.instance_key}&token={instance.instance_token}"
         print(init_url)
         init_response = requests.get(init_url,verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
         
         time.sleep(2)
         
-        qr_url=f"http://localhost:3333/instance/qr?key={instance.instance_key}"
+        qr_url=BASE_URL+f"/instance/qr?key={instance.instance_key}"
         qr_response=requests.get(qr_url, verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
         
         print(qr_response)
@@ -83,7 +87,7 @@ def generate_qr(request,instance_id):
         
         time.sleep(2)
         
-        check_url=f"http://localhost:3333/instance/info?key={instance.instance_key}"
+        check_url=BASE_URL+f"/instance/info?key={instance.instance_key}"
         check_response=requests.get(check_url, verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
         check_json=check_response.json()
         
@@ -117,46 +121,55 @@ def messaging(request,instance_id):
     instance=Instance.objects.get(id=instance_id)
     if request.method=="POST":
         
-        send_message_url=f"http://localhost:3333/message/text?key={instance.instance_key}"
+        send_message_url=BASE_URL+f"/message/text?key={instance.instance_key}"
         message_context = request.FILES.get('message')
         print(type(message_context))
         print(message_context)
-        if message_context:
-            wb = load_workbook(message_context)
-            sheet = wb.active
-            # for row in sheet.iter_rows(values_only=True):
-            #     for cell_value in row:
-            #         print(cell_value)
-                    
-            data = []
-            init_url=f"http://localhost:3333/instance/init?key={instance.instance_key}&token={instance.instance_token}"
-            print(init_url)
-            init_response = requests.get(init_url,verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
+        file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', message_context.name)
+        print(message_context.name)
+        # send_message.delay(message_context,instance_id)
+        send_message.apply_async(args=[file_path, instance_id])
         
-            time.sleep(2)
-            for row in sheet.iter_rows(values_only=True):
-                if len(row) >= 2: 
-                    data.append((row[0], row[1]))
-            print(data) 
-            for i in data:
-                print(i[0],i[1])
-                body_data = {
-                    "id": i[0],
-                    "message": i[1]
-                }
-                try:
-                    response=requests.post(send_message_url, data=body_data , verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, auth=None, hooks=None, json=None, params=None)
-                    time.sleep(2)
-                    print(send_message_url)
-                    print(response.text)
-                    print(response)
-                    if response.status_code >= 200 and response.status_code < 300:
-                        print("Request sent successfully.")
-                        messages.success(request, f"Message sent successfully for {i[0]}")
-                    else:
-                        print(f"Failed to send request. Status code: {response.status_code}")
-                        messages.error(request, f"Failed to send message for {i[0]}. Please try again.")       
-                except Exception as e:
-                    print(e)
+        # if message_context:
+        #     wb = load_workbook(message_context)
+        #     sheet = wb.active
+        #     # for row in sheet.iter_rows(values_only=True):
+        #     #     for cell_value in row:
+        #     #         print(cell_value)
+                    
+        #     data = []
+        #     # init_url=BASE_URL+f"/instance/init?key={instance.instance_key}&token={instance.instance_token}"
+        #     # print(init_url)
+        #     # init_response = requests.get(init_url,verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
+        
+        #     # time.sleep(2)
+        #     for row in sheet.iter_rows(values_only=True):
+        #         if len(row) >= 2: 
+        #             data.append((row[0], row[1]))
+        #     print(data) 
+        #     for i in data:
+        #         print(i[0],i[1])
+        #         body_data = {
+        #             "id": i[0],
+        #             "message": i[1]
+        #         }
+        #         try:
+        #             response=requests.post(send_message_url, data=body_data , verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, auth=None, hooks=None, json=None, params=None)
+        #             time.sleep(2)
+        #             print(send_message_url)
+        #             print(response.text)
+        #             print(response)
+        #             if response.status_code >= 200 and response.status_code < 300:
+        #                 print("Request sent successfully.")
+        #                 messages.success(request, f"Message sent successfully for {i[0]}")
+        #             else:
+        #                 print(f"Failed to send request. Status code: {response.status_code}")
+        #                 messages.error(request, f"Failed to send message for {i[0]}. Please try again.")       
+        #         except Exception as e:
+        #             print(e)
         return redirect('home')
     return render(request,"messaging.html",{"instance":instance})
+
+def delete_all_messages(request):
+    delete_all_messages.delay()
+    return redirect('home')
