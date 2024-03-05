@@ -1,30 +1,38 @@
 {% extends 'base.html'%}
 {% block content %}
 
-{% for message in messages %}
-    <div class="alert alert-primary m-4" role="alert">
-      {{ message }}
-    </div>
-{% endfor %}
-    <div class="container bcontent mt-4 ">
-      <h3>Instance</h3>
-      <hr />
-      {% for instance in user_instances %}
-      <div class="card" style="width: 700px; margin-left:200px">
-          <div class="row no-gutters">  
-            <div class="card-body">
-              <h5 class="card-title">{{instance.instance_key}}</h5>
-              <p class="card-text">{{instance.instance_token}}</p>
-              <p class="card-text">{{instance.user_id}}</p>
-                {% if not instance.qrscanned %}
-              <a href="{% url 'generate_qr' instance.pk %}" class="btn btn-primary">generate Qr</a>
-              {% else %}
-              <a href="{% url 'messaging' instance.pk %}" class="btn btn-primary">Start messaging</a>
-              {% endif %}
+<div class="container bcontent mt-4 ">
+  <h3>Instance</h3>
+  <hr />
+  {% for instance in user_instances %}
+  <div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card mb-3 bg-light shadow">
+                <div class="row g-0">
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <h5 class="card-title">{{instance.instance_name}}</h5>
+                            <p class="card-text">{{instance.instance_key}}</p>
+                            <p class="card-text">{{instance.user_id}}</p>
+                            <p class="card-text"><small class="text-muted">Created at {{instance.instance_created_at}}</small></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-center justify-content-end">
+                        {% if not instance.qrscanned %}
+                            <button class="btn btn-primary">Scan Qr</button>
+                        {% else %}
+                            <button class="btn btn-primary">Start messaging</button>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-          </div>
-      </div>
-      {% endfor %}
-  </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+</div>
+
 
 {% endblock %}

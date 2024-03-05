@@ -15,6 +15,9 @@ from django.http import HttpResponse, FileResponse
 from messaging_app.tasks import send_message,delete_all_messages
 import os
 from django.conf import settings
+from django.utils import timezone
+excel_counter=0
+
 
 def login(request):
     if request.method=="POST":
@@ -118,6 +121,7 @@ def generate_qr(request,instance_id):
 
 @login_required(login_url='login')
 def messaging(request,instance_id):
+    global excel_counter
     instance=Instance.objects.get(id=instance_id)
     if request.method=="POST":
         
@@ -125,11 +129,21 @@ def messaging(request,instance_id):
         message_context = request.FILES.get('message')
         print(type(message_context))
         print(message_context)
-        file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', message_context.name)
+        # file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', message_context.name)
+        file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', "Excel_"+str(excel_counter)+".xlsx")
+        excel_counter+=1
+        with open(file_path, 'wb+') as destination:
+            for chunk in message_context.chunks():
+                destination.write(chunk)
         print(message_context.name)
         # send_message.delay(message_context,instance_id)
-        send_message.apply_async(args=[file_path, instance_id])
-        
+        new_log=Log.objects.create(user=request.user,instance=instance,Excel_sheet=file_path,Started_at=timezone.now(),Ended_at=timezone.now(),Successful=False)
+        try:
+            send_message.apply_async(args=[file_path, instance_id,new_log.id])
+            
+            messages.success(request,"Request sent successfully.")
+        except Exception as e:
+            messages.success(request,"Failed to send request.")
         # if message_context:
         #     wb = load_workbook(message_context)
         #     sheet = wb.active

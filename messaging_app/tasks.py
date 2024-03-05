@@ -8,6 +8,8 @@ import requests
 import time
 from whatsapp.settings import BASE_URL
 from django.contrib import messages
+from django.utils import timezone
+from messaging_app.models import Log
 # from messaging_app.models import Instance,Message,Log
 
 #  python -m celery -A whatsapp  worker -l info -P eventlet
@@ -15,7 +17,9 @@ from django.contrib import messages
 logging.basicConfig(filename='celery.log', level=logging.INFO)
 
 @shared_task()
-def send_message(excel_path,instance_id):
+def send_message(excel_path,instance_id,log_id):
+    start_time = time.time()
+    print(start_time)
     logging.info(instance_id)
     instance=Instance.objects.get(id=instance_id)
     # restore_url="http://localhost:3333/instance/restore"
@@ -31,6 +35,7 @@ def send_message(excel_path,instance_id):
                     data.append((row[0], row[1]))
             logging.info(f"Data to be sent: {data}")
             
+            log_update=Log.objects.get(id=log_id)
             for i in data:
                 logging.info(f"Sending message for ID: {i[0]}, Message: {i[1]}")
                 body_data = {
@@ -43,16 +48,17 @@ def send_message(excel_path,instance_id):
                     logging.info(f"Request URL: {send_message_url}")
                     logging.info(f"Response text: {response.text}")
                     logging.info(f"Response status code: {response.status_code}")
-                    
+                    log_update.Successful=True
                 except Exception as e:
                     logging.error(f"Exception occurred: {e}")
-            
-            if response.status_code >= 200 and response.status_code < 300:
-                messages.success("Request sent successfully.")
+                    log_update.Successful=False
+            # end_time = time.time()
+            end_datetime = timezone.now()
+            log_update.Ended_at=end_datetime
+            log_update.save()
 
-            else:
-                messages.success(f"Failed to send request. Status code: {response.status_code}")
-                
+
+@shared_task()
 def delete_all_messages():
     instances =Instance.objects.all()
     for instance in instances:
