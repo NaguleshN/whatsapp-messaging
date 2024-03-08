@@ -1,8 +1,30 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
-
-
+<div class="heading mt-4 mb-2" style="text-align:center;font-weight:bold;font-size:28px;">
+    <h3>LOGS</h3>
+</div>
+<div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-hover" >
+        <thead class="thead-dark ">
+            <tr>
+                <th>Instance Name</th>
+                <th>Instance Key</th>
+                <th>Excel path</th>
+                <th>Successful</th>
+            </tr>
+        </thead>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.instance.instance_name }}</td>
+                <td>{{ log.instance.instance_key }}</td>
+                <td>{{ log.excel_sheet }}</td>
+                <td>{{ log.successfull }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 
 {% endblock %}

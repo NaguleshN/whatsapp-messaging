@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sweetify',
     'messaging_app',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'whatsapp.urls'
@@ -83,6 +85,11 @@ DATABASES = {
     }
 }
 
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://10.1.76.125:7708",
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -139,5 +146,6 @@ MEDIA_URL  = '/media/'
 SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 
 
-BASE_URL="http://10.1.76.125:7708"
+# BASE_URL="http://10.1.76.125:7708"
+BASE_URL="http://10.1.76.125:8801"
 # BASE_URL="http://localhost:3333"

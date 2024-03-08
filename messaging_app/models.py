@@ -27,10 +27,10 @@ class Message(models.Model):
 class Log(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     instance = models.ForeignKey(Instance, on_delete=models.CASCADE)
-    Excel_sheet = models.CharField(max_length=100)
-    Started_at = models.DateTimeField()
-    Ended_at = models.DateTimeField()
-    Successful = models.BooleanField()
+    excel_sheet = models.CharField(max_length=100)
+    started_at = models.DateTimeField()
+    ended_at = models.DateTimeField()
+    successfull = models.BooleanField()
 
     def __str__(self):
         return self.user.username + " --> "+self.instance.instance_key

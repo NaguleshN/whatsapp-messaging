@@ -25,13 +25,11 @@
     location.reload();
 }, 20000);
 
-
 document.getElementById("refreshButton").addEventListener("click", function() {
   location.reload();
 });
 
 var countdownElement = document.getElementById("countdown");
-
         var countdownValue = 20;
         function updateCountdown() {
             countdownElement.textContent = countdownValue;
@@ -42,4 +40,5 @@ var countdownElement = document.getElementById("countdown");
             }
         }
         var intervalId = setInterval(updateCountdown, 1000);
+
 </script>

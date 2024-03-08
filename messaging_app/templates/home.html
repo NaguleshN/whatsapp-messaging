@@ -1,7 +1,12 @@
 {% extends 'base.html'%}
 {% block content %}
-
 <div class="container bcontent mt-4 ">
+{% for message in messages %}
+<div class="alert alert-primary" role="alert">
+    {{message}}
+  </div>
+{% endfor %}
+
   <h3>Instance</h3>
   <hr />
   {% for instance in user_instances %}
@@ -14,16 +19,16 @@
                         <div class="card-body">
                             <h5 class="card-title">{{instance.instance_name}}</h5>
                             <p class="card-text">{{instance.instance_key}}</p>
-                            <p class="card-text">{{instance.user_id}}</p>
-                            <p class="card-text"><small class="text-muted">Created at {{instance.instance_created_at}}</small></p>
+                            {% comment %} <p class="card-text"><small class="text-muted">Created at {{instance.instance_created_at}}</small></p> {% endcomment %}
                         </div>
                     </div>
                     <div class="col-md-4 d-flex align-items-center justify-content-end">
                         {% if not instance.qrscanned %}
-                            <button class="btn btn-primary">Scan Qr</button>
+                            <a href="{% url 'generate_qr' instance.id %}"><button class="btn btn-primary">Scan Qr</button></a>
                         {% else %}
-                            <button class="btn btn-primary">Start messaging</button>
+                            <a href="{% url 'messaging' instance.id %}"><button class="btn btn-primary">Start messaging</button></a>
                         {% endif %}
+                        <a href="{% url 'delete_instance' instance.id %}"><button class="btn btn-danger ml-2">Delete instance</button></a>
                     </div>
                 </div>
             </div>
