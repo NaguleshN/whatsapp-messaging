@@ -34,8 +34,8 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
-                <a class="btn btn-outline-success btn-sm text-white my-2 my-sm-0 mr-sm-2" href="{% url 'create_instance' %}">Create Instance</a>
-                <a class="btn btn-outline-danger btn-sm text-white my-2 my-sm-0 mr-sm-2" href="{% url 'delete_all_messages' %}">Delete All Instance</a>
+                {% comment %} <a class="btn btn-outline-success btn-sm text-white my-2 my-sm-0 mr-sm-2" href="{% url 'create_instance' %}">Create Instance</a>
+                <a class="btn btn-outline-danger btn-sm text-white my-2 my-sm-0 mr-sm-2" href="{% url 'delete_all_messages' %}">Delete All Instance</a> {% endcomment %}
                 <a class="btn btn-outline-danger btn-sm text-white my-2 my-sm-0 mr-sm-2" href="{% url 'logout' %}">Logout</a>
             </form>
         </div>

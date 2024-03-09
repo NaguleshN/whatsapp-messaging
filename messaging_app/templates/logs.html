@@ -11,16 +11,41 @@
             <tr>
                 <th>Instance Name</th>
                 <th>Instance Key</th>
-                <th>Excel path</th>
-                <th>Successful</th>
+                <th>Excel name</th>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Duration</th>
+                <th>Successfull</th>
             </tr>
         </thead>
             {% for log in logs %}
             <tr>
                 <td>{{ log.instance.instance_name }}</td>
                 <td>{{ log.instance.instance_key }}</td>
-                <td>{{ log.excel_sheet }}</td>
-                <td>{{ log.successfull }}</td>
+
+                <td>{{ log.excel_name}}</td>
+                
+                <td>{{ log.started_at }}</td>
+                <td>{{ log.ended_at }}</td>
+                <td>
+                    {% if log.duration != None%}
+                    {{log.duration}}s
+                    {% else %}
+                    {{log.duration}}
+                    {% endif %}
+                </td>
+
+                <td>{% if log.successfull %} 
+                        Completed 
+                    {% else %} 
+                        {% if log.ended_at == None %}
+                            In progress
+                        {% else %}
+                            Failed
+                        {% endif %}
+                    {% endif %}
+                </td>
+                
             </tr>
             {% endfor %}
         </table>

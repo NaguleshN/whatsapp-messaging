@@ -88,19 +88,20 @@ document.addEventListener("DOMContentLoaded", function() {
 //}, 20000);
 
 
-const key = "{{instance_key}}";
-const img_url="http://10.1.76.125:8801/instance/qrbase64?key="+key ;
-const info_url ="http://10.1.76.125:8801/instance/info?key="+key ;
-const init_url ="/instance/init?key="+key+"&token={{instance_token}}";
+let key = "{{instance_key}}";
+let token="Instance token";
+let init_url ="http://10.1.76.125:8801/instance/init?key="+key+"&token="+token;
+let img_url="http://10.1.76.125:8801/instance/qrbase64?key="+key ;
 console.log(img_url)
+console.log(init_url)
 
 async function imageResponse(){
     try{
         console.log(img_url)
-        const initResponse = await fetch(init_url, {
-            method: "GET",
-            redirect:"follow",
-        })
+       // const initResponse = await fetch(init_url, {
+       //     method: "GET",
+       //     redirect:"follow",
+       // })
         const imgResponse = await fetch(img_url, {
             method: "GET",
             redirect:"follow",
@@ -108,14 +109,17 @@ async function imageResponse(){
         console.log(imgResponse)
         const imgBody = await imgResponse.text();
         console.log("Body content:", imgBody);
-        if (imgBody.qrcode !== "") {
-            console.log("Qrcode content:", JSON.parse(imgBody).qrcode);
+        let jsonBodyObj=JSON.parse(imgBody);
+
+        if (imgBody.qrcode !== " " || imgBody.qrcode !== "" || imgBody.qrcode !== null || imgBody.qrcode !== undefined) {
+            //console.log("Qrcode content:", JSON.parse(imgBody).qrcode);
+            console.log("Qrcode content:", jsonBodyObj.qrcode);
             console.log("Image is not empty.");
             document.getElementById("imageElement").src = JSON.parse(imgBody).qrcode;
             
         } else {
            console.log("Image is empty or does not exist.");
-
+           imageResponse();
         }
     }
     catch (error) {

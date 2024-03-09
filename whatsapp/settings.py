@@ -149,3 +149,5 @@ SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 # BASE_URL="http://10.1.76.125:7708"
 BASE_URL="http://10.1.76.125:8801"
 # BASE_URL="http://localhost:3333"
+
+SAMPLE_EXCEL_PATH= "C://Users/nagul/Desktop/projects/whatsapp/media/Sample_excel.xlsx"

@@ -1,0 +1,1 @@
+celery -A whatsapp worker -l info --pool=solo

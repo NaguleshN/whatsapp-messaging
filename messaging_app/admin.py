@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(Message)
 admin.site.register(Instance)
 admin.site.register(Log)
+admin.site.register(Whatsapp_config)

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User,auth
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 import uuid
-from messaging_app.models import Instance,Message,Log
+from messaging_app.models import Instance,Message,Log,Whatsapp_config
 import requests
 import ssl
 import time
@@ -17,8 +17,7 @@ import os
 from django.conf import settings
 from django.utils import timezone
 from celery import Celery
-excel_counter=0
-
+from datetime import datetime
 
 def login(request):
     if request.method=="POST":
@@ -35,9 +34,9 @@ def login(request):
 
 @login_required(login_url='login')
 def home(request):
-    success_message = request.GET.get('success')
-    if success_message:
-        messages.success(request ,"Your success message here.") 
+    # success_message = request.GET.get('success')
+    # if success_message:
+    #     messages.success(request ,"Your success message here.") 
     user_instances=Instance.objects.filter(user_id=request.user)
     print(user_instances)
     return render(request,"home.html",{"user_instances":user_instances})
@@ -150,14 +149,23 @@ def generate_qr(request,instance_id):
 
 @login_required(login_url='login')
 def messaging(request,instance_id):
-    success_message = request.GET.get('success')
-    if success_message:
-        messages.success(request ,"You successfully scanned QR .") 
-        instance=Instance.objects.get(id=instance_id)
-        instance.qrscanned=True
-        instance.save()
+    instance=Instance.objects.get(id=instance_id)
+    check_url=BASE_URL+f"/instance/info?key={instance.instance_key}"
+    check_response=requests.get(check_url, verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
+    check_json=check_response.json()
         
-    global excel_counter
+    print(check_json)
+        # print(check_response.text)
+    instance_data = check_json.get('instance_data', {})  
+    user_data = instance_data.get('user', {}) 
+    string=user_data['id']
+    print(user_data)
+    # print(string[0:12])
+    instance.phone_number=string[0:12]
+    instance.save()
+    print(instance.phone_number)
+    success_message = request.GET.get('success')
+        
     instance=Instance.objects.get(id=instance_id)
     
     if request.method=="POST":
@@ -166,16 +174,30 @@ def messaging(request,instance_id):
         print(type(message_context))
         print(message_context)
         
-        file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', "Excel_"+str(excel_counter)+".xlsx")
-        excel_counter+=1
+        
+        try:
+            whatsapp_config=Whatsapp_config.objects.get(key=1)
+        except Exception as e:
+            whatsapp_config=Whatsapp_config.objects.create(key=1,excel_count=0)
+            
+        whatsapp_config.excel_count=whatsapp_config.excel_count+1
+        count=whatsapp_config.excel_count
+        print(count)
+        whatsapp_config.save()
+        
+        print(whatsapp_config.excel_count)
+        
+        excel_name="Excel_"+str(count)+".xlsx"
+        file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', excel_name)
+        
         with open(file_path, 'wb+') as destination:
             for chunk in message_context.chunks():
                 destination.write(chunk)
         print(message_context.name)
         # send_message.delay(message_context,instance_id)
-        new_log=Log.objects.create(user=request.user,instance=instance,excel_sheet=file_path,started_at=timezone.now(),ended_at=timezone.now(),successfull=False)
+        new_log=Log.objects.create(user=request.user,instance=instance,excel_sheet=file_path,excel_name=excel_name,started_at=datetime.now(),successfull=False)
         try:
-            send_message.apply_async(args=[file_path, instance_id,new_log.id])
+            send_message.delay(file_path, instance_id,new_log.id)
             
             messages.success(request,"Request sent successfully.")
         except Exception as e:
@@ -218,6 +240,11 @@ def messaging(request,instance_id):
         #         except Exception as e:
         #             print(e)
         return redirect('home')
+    if success_message:
+        messages.success(request ,"You successfully scanned QR .") 
+        instance=Instance.objects.get(id=instance_id)
+        instance.qrscanned=True
+        instance.save()
     return render(request,"messaging.html",{"instance":instance})
 
 def delete_all_messages(request):
@@ -233,16 +260,14 @@ def delete_all_messages(request):
             time.sleep(2)
         except Exception as e:
             print(e)
-    # return render('home.html')
     return redirect('home')
 
 
 def Log_view(request):
-    instance=Instance.objects.filter(user_id=request.user)
+    instances=Instance.objects.filter(user_id=request.user)
     logs=[]
-    for i in instance:
-        logs+=Log.objects.filter(instance=i)
-    # logs=Log.objects.filter(instance=instance)
+    for instance in instances:
+        logs+=Log.objects.filter(instance=instance)
     return render(request,"logs.html",{"logs":logs})
 
 
@@ -258,3 +283,20 @@ def delete_instance(request,instance_id):
     except Exception as e:
         print(e)
     return redirect('home')
+
+
+
+from django.http import HttpResponse
+import mimetypes
+from whatsapp.settings import SAMPLE_EXCEL_PATH
+
+def serve_excel_file(request):
+    excel_path=SAMPLE_EXCEL_PATH
+    # excel_path = "C://Users/nagul/Desktop/projects/whatsapp/media/Sample_excel.xlsx" 
+    if os.path.exists(excel_path):
+        with open(excel_path, 'rb') as file:
+            response = HttpResponse(file.read(), content_type=mimetypes.guess_type(excel_path)[0])
+            response['Content-Disposition'] = 'attachment; filename="Sample_excel.xlsx"'
+            return response
+    else:
+        return HttpResponse("File not found")

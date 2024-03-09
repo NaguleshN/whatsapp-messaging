@@ -14,5 +14,6 @@ urlpatterns = [
     path('delete_instance/<int:instance_id>', views.delete_instance,name="delete_instance"),
     path('generate_qr/<int:instance_id>',views.generate_qr,name='generate_qr'),
     path('messaging/<int:instance_id>',views.messaging,name='messaging'),
+    path('serve_excel/', views.serve_excel_file, name='serve_excel'),
 
 ]
