@@ -1,5 +1,7 @@
 {% extends 'base.html'%}
 {% block content %}
+
+
 <div class="container bcontent mt-4 ">
 
 {% for message in messages %}
@@ -7,35 +9,38 @@
     {{message}}
   </div>
 {% endfor %}
-<h3>Instance</h3>
 <form class="form-inline my-2 my-lg-0">
-    <div>
-<a class="btn btn-outline-success btn-sm my-2 my-sm-0 mr-sm-2" href="{% url 'create_instance' %}">Create Instance</a>
-<a class="btn btn-outline-danger btn-sm my-2 my-sm-0 mr-sm-2" href="{% url 'delete_all_messages' %}">Delete All Instance</a>
-</div>
+    <h3>Chatspheres</h3>
+    <div class="ml-auto"> 
+        <a class="btn btn-outline-success btn-sm my-2 my-sm-0 mr-sm-2" href="{% url 'create_instance' %}">Create Chatsphere</a>
+        <a class="btn btn-outline-danger btn-sm my-2 my-sm-0 mr-sm-2" href="{% url 'delete_all_messages' %}">Delete All Chatspheres</a>
+    </div>
 </div>
 <hr />
 {% for instance in user_instances %}
+
+
   <div class="container">
     <div class="row">
         <div class="col">
-            <div class="card mb-3 bg-light shadow">
+            <div class="card mb-3 bg-light shadow"  >
                 <div class="row g-0">
                     <div class="col-md-7">
-                        <div class="card-body">
+                        <div class="card-body" >
                             <h5 class="card-title">{{instance.instance_name}}</h5>
-                            <p class="card-text">{{instance.instance_key}}</p>
+                            <p class="card-text">{{instance.phone_number}}</p>
                             {% comment %} <p class="card-text"><small class="text-muted">Created at {{instance.instance_created_at}}</small></p> {% endcomment %}
                         </div>
                     </div>
                     <div class="col-md-4 d-flex align-items-center justify-content-end">
                         {% if not instance.qrscanned %}
-                            <a href="{% url 'generate_qr' instance.id %}"><button class="btn btn-primary">Scan Qr</button></a>
+                        <a class="btn btn-primary btn-md my-2 my-sm-0 mr-sm-2" href="{% url 'generate_qr' instance.id %}">Scan Qr</a>
                         {% else %}
-                            <a href="{% url 'messaging' instance.id %}"><button class="btn btn-primary">Start messaging</button></a>
+                        <a class="btn btn-primary btn-md my-2 my-sm-0 mr-sm-2" href="{% url 'messaging' instance.id %}">Start messaging</a>
+                            {% comment %} <a href="{% url 'messaging' instance.id %}"><button class="btn btn-primary">Start messaging</button></a> {% endcomment %}
                         {% endif %}
                         <a href="#" onclick="confirmDelete('{{ instance.id }}')"> 
-                            <button class="btn btn-danger ml-2">Delete instance</button>
+                            <button class="btn btn-danger ml-2">Delete Chatsphere</button>
                         </a>
                     </div>
                 </div>

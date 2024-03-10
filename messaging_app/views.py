@@ -18,6 +18,11 @@ from django.conf import settings
 from django.utils import timezone
 from celery import Celery
 from datetime import datetime
+from django.http import HttpResponse
+import mimetypes
+from whatsapp.settings import SAMPLE_EXCEL_PATH
+
+
 
 def login(request):
     if request.method=="POST":
@@ -61,7 +66,7 @@ def create_instance(request):
         count = filtered_objects.count()
         
         if count >= 3:
-            messages.error(request, 'You can only create 3 instances.')
+            messages.error(request, 'You can only create 3 Chatspheres .')
             print("Number of filtered objects:", count)
             print("Count exceeded")
             return redirect('home') 
@@ -78,7 +83,7 @@ def create_instance(request):
             print("instance created")
         #     data=response.json()
         Instance.objects.create(user_id=request.user,instance_name=instance_name,instance_key=instance_key,instance_token=instance_token )
-        messages.success(request, 'Instance created successfully. Please scan the QR code to start messaging.')
+        messages.success(request, 'Chatsphere created successfully. Please scan the QR code to start messaging.')
         print(" created instance ")
         return redirect('home')
     user=User.objects.get(id=user_id)
@@ -92,50 +97,48 @@ def create_instance(request):
         return redirect('home') 
     unique_key = uuid.uuid4().hex
     return render(request,"create_instance.html",{"unique_key":unique_key})
-    # return render(request,"messaging2.html")
 
     
 @login_required(login_url='login')
 def generate_qr(request,instance_id):
     instance=Instance.objects.get(id=instance_id)
+    print("helllllllllllllllllllllllll")
+    
     try:
+        init_url=BASE_URL+f"/instance/init?key={instance.instance_key}&token={instance.instance_token}"
+        print(init_url)
+        init_response = requests.get(init_url,verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
         
-        # init_url=BASE_URL+f"/instance/init?key={instance.instance_key}&token={instance.instance_token}"
-        # print(init_url)
-        # init_response = requests.get(init_url,verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
+        time.sleep(2)
         
-        # time.sleep(2)
+        qr_url2=BASE_URL+f"/instance/qrbase64?key={instance.instance_key}"
+        qr_response=requests.get(qr_url2, verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
         
-        # qr_url2=BASE_URL+f"/instance/qrbase64?key={instance.instance_key}"
-        # qr_url=BASE_URL+f"/instance/qr?key={instance.instance_key}"
-        # qr_response=requests.get(qr_url2, verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
-        
-        # print(qr_response)
-        # print(qr_response.text)
-        # qr_response1=qr_response.json()
-        # qrcode=qr_response1.get('qrcode',{})
-        # print(qrcode)
-        # time.sleep(2)
+        print(qr_response)
+        print(qr_response.text)
+        qr_response1=qr_response.json()
+        qrcode=qr_response1.get('qrcode',{})
+        print(qrcode)
+        time.sleep(2)
         
         check_url=BASE_URL+f"/instance/info?key={instance.instance_key}"
         check_response=requests.get(check_url, verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
         check_json=check_response.json()
         
         print(check_json)
-        # print(check_response.text)
         instance_data = check_json.get('instance_data', {})  
         user_data = instance_data.get('user', {}) 
 
         if not user_data:
             print("User data is empty.")
             return render(request,"qr2.html",{"instance_id":instance_id,"instance_key":instance.instance_key})
-            # return render(request,"qr2.html",{"qr":qrcode,"instance_id":instance_id})
         else:
             print("User data is not empty.")
-            
+
             messages.success(request, 'Start messaging ... ')
             print(instance.qrscanned)
             instance.qrscanned=True
+            print("hiiiiiiiiiiiiiiiiiiiiiil")
             instance.save()
             print("updated successfully")
             return redirect('home')
@@ -143,6 +146,7 @@ def generate_qr(request,instance_id):
         return render(request,"qr2.html",{"qr":qr_response.text,"instance_id":instance_id,"instance_key":instance.instance_key})
     
     except Exception as e:
+        print("hiiiiiiiiiiiiiiiiiiiiiil")
         print(e)
         print(instance)
     return redirect('home')
@@ -248,7 +252,7 @@ def messaging(request,instance_id):
     return render(request,"messaging.html",{"instance":instance})
 
 def delete_all_messages(request):
-    delete_all_instance.apply_async(args=[])
+    # delete_all_instance.apply_async(args=[])
     instances =Instance.objects.all()
     for instance in instances:
         try:
@@ -286,13 +290,8 @@ def delete_instance(request,instance_id):
 
 
 
-from django.http import HttpResponse
-import mimetypes
-from whatsapp.settings import SAMPLE_EXCEL_PATH
-
 def serve_excel_file(request):
     excel_path=SAMPLE_EXCEL_PATH
-    # excel_path = "C://Users/nagul/Desktop/projects/whatsapp/media/Sample_excel.xlsx" 
     if os.path.exists(excel_path):
         with open(excel_path, 'rb') as file:
             response = HttpResponse(file.read(), content_type=mimetypes.guess_type(excel_path)[0])
