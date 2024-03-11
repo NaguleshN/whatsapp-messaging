@@ -24,6 +24,10 @@ venv/
 ENV/ 
 env.bak/ 
 venv.bak/ 
+.pip 
+pip/
+
+celery.log
 
 # Visual Studio Code # 
 .vscode/* 
