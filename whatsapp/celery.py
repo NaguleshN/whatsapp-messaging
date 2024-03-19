@@ -14,6 +14,6 @@ app.autodiscover_tasks()
 # celery = Celery('tasks', broker='redis://localhost:6379/0')
 
 
-# @app.task(bind=True)
-# def debug_task(self):
-#     printf(f"request: {self.request!r}")
+@app.task(bind=True)
+def debug_task(self):
+    printf(f"request: {self.request!r}")

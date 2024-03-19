@@ -7,32 +7,20 @@
     <title>messaging app</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        {% comment %} 
+        {% endcomment %}
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.js"
-        ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"
-       ></script>
-    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"
-        ></script>
-    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap5.js"
-       ></script>
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-       <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.bootstrap5.css">
-       <link rel="stylesheet" type="text/css" href="path/to/datatables.min.css">
-       <script type="text/javascript" src="path/to/datatables.min.js"></script>
-       
-       <!-- DataTables Buttons CSS and JS files -->
-       <link rel="stylesheet" type="text/css" href="path/to/buttons.dataTables.min.css">
-       <script type="text/javascript" src="path/to/dataTables.buttons.min.js"></script>
-
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -49,12 +37,10 @@
                     <a class="nav-link text-white" aria-current="page" href="{% url 'log' %}">LOGS </a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                {% comment %} <a class="btn btn-outline-success btn-sm text-white my-2 my-sm-0 mr-sm-2" href="{% url 'create_instance' %}">Create Instance</a>
-                <a class="btn btn-outline-danger btn-sm text-white my-2 my-sm-0 mr-sm-2" href="{% url 'delete_all_messages' %}">Delete All Instance</a> {% endcomment %}
-                <a class="btn btn-outline-danger btn-sm text-white my-2 my-sm-0 mr-sm-2" href="{% url 'logout' %}">Logout</a>
+            <form method="post" action="{% url 'logout' %}" class="form-inline my-2 my-lg-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm text-white my-2 my-sm-0 mr-sm-2">logout</button>
             </form>
-        </div>
     </nav>
     
     {% block content %}

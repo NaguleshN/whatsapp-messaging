@@ -86,17 +86,15 @@ def send_message(excel_path,instance_id,log_id):
 
 
 @shared_task()
-def delete_all_instance():
-    instances =Instance.objects.all()
-    for instance in instances:
-        try:
-            print(instance)
-            delete_url= BASE_URL+f"/instance/delete?key={instance.instance_key}"
-            print(delete_url)
-            instance.delete()
-            delete_response = requests.delete(delete_url, verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
-            time.sleep(2)
-        except Exception as e:
-            print(e)
-            pass
-     
+def delete_instance_api(instance_id):
+    # instance =Instance.objects.get(instance_id)
+    try:
+        # print(instance)
+        delete_url= BASE_URL+f"/instance/delete?key={instance_id}"
+        print(delete_url)
+        # instance.delete()
+        delete_response = requests.delete(delete_url, verify=True, timeout=None, allow_redirects=True, stream=False, proxies=None, headers=None, cookies=None, files=None, data=None, auth=None, hooks=None, json=None, params=None)
+        time.sleep(2)
+    except Exception as e:
+        print(e)
+        pass

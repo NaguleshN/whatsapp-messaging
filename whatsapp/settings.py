@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sweetify',
     'messaging_app',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +133,14 @@ LOGOUT_REDIRECT_URL='login'
 CELERY_BROKER_URL = "redis://localhost:6379"
 # CELERY_RESULT_BACKEND = "redis://localhost:6379"
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_RESULT_SERIALIZER='json'
+CELERY_TASK_SERIALIZER='json'
+CELERY_ACCEPT_CONTENT=['json']
+CELERY_TIMEZONE ='Asia/Kolkata'
+
+CELERY_RESULT_BACKEND='django-db'
+
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL  = '/media/'
