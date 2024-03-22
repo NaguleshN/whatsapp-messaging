@@ -89,38 +89,38 @@ def home(request):
             
         except requests.exceptions.RequestException as e:
             print(f"An error occurred: {e}")
-            message.error(request,"An error occurred while processing your request.")
+            messages.error(request,"An error occurred while processing your request.")
             return redirect('home')
 
         except requests.exceptions.HTTPError as e:
             print(f"HTTP error occurred: {e}")
-            message.error(request,"HTTP error occurred while processing your request.")
+            messages.error(request,"HTTP error occurred while processing your request.")
             return redirect('home')
 
         except requests.exceptions.ConnectionError as e:
             print(f"Connection error occurred: {e}")
-            message.error(request,"Connection error occurred while processing your request.")
+            messages.error(request,"Connection error occurred while processing your request.")
             return redirect('home')
 
         except requests.exceptions.Timeout as e:
             print(f"Request timed out: {e}")
-            message.error(request,"Request timed out while processing your request.")
+            messages.error(request,"Request timed out while processing your request.")
             return redirect('home')
 
         except requests.exceptions.TooManyRedirects as e:
             print(f"Too many redirects: {e}")
-            message.error(request,"Too many redirects occured while processing your request.")
+            messages.error(request,"Too many redirects occured while processing your request.")
             return redirect('home')
 
         except requests.exceptions.SSLError as e:
             print(f"SSL certificate error occurred: {e}")
-            message.error(request,"SSL certificate error occurred while processing your request.")
+            messages.error(request,"SSL certificate error occurred while processing your request.")
             return redirect('home')
                 
         except Exception as e:
             print(e)
             print("An error occured on check info url response.")
-            message.error(request,"An error occured on check info url response.")
+            messages.error(request,"An error occured on check info url response.")
             return redirect('home') 
             
         
@@ -184,38 +184,38 @@ def messaging(request,instance_id):
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
         check_json = {}
-        message.error(request,"An error occurred while processing your request.")
+        messages.error(request,"An error occurred while processing your request.")
         return redirect('home')
 
     except requests.exceptions.HTTPError as e:
         print(f"HTTP error occurred: {e}")
-        message.error(request,"HTTP error occurred while processing your request.")
+        messages.error(request,"HTTP error occurred while processing your request.")
         return redirect('home')
 
     except requests.exceptions.ConnectionError as e:
         print(f"Connection error occurred: {e}")
-        message.error(request,"Connection error occurred while processing your request.")
+        messages.error(request,"Connection error occurred while processing your request.")
         return redirect('home')
 
     except requests.exceptions.Timeout as e:
         print(f"Request timed out: {e}")
-        message.error(request,"Request timed out while processing your request.")
+        messages.error(request,"Request timed out while processing your request.")
         return redirect('home')
 
     except requests.exceptions.TooManyRedirects as e:
         print(f"Too many redirects: {e}")
-        message.error(request,"Too many redirects occured while processing your request.")
+        messages.error(request,"Too many redirects occured while processing your request.")
         return redirect('home')
 
     except requests.exceptions.SSLError as e:
         print(f"SSL certificate error occurred: {e}")
-        message.error(request,"SSL certificate error occurred while processing your request.")
+        messages.error(request,"SSL certificate error occurred while processing your request.")
         return redirect('home')
             
     except Exception as e:
         print(e)
         print("An error occured on check info url response.")
-        message.error(request,"An error occured on check info url response.")
+        messages.error(request,"An error occured on check info url response.")
         return redirect('home') 
         
     print(check_json)
@@ -386,38 +386,38 @@ def generate_qr(request,instance_id):
         
         except requests.exceptions.RequestException as e:
             print("An error occurred while processing your request.")
-            message.error(request,"An error occurred while processing your request.")
+            messages.error(request,"An error occurred while processing your request.")
             return redirect('home')
 
         except requests.exceptions.HTTPError as e:
             print(f"HTTP error occurred: {e}")
-            message.error(request,"HTTP error occurred while processing your request.")
+            messages.error(request,"HTTP error occurred while processing your request.")
             return redirect('home')
 
         except requests.exceptions.ConnectionError as e:
             print(f"Connection error occurred: {e}")
-            message.error(request,"Connection error occurred while processing your request.")
+            messages.error(request,"Connection error occurred while processing your request.")
             return redirect('home')
 
         except requests.exceptions.Timeout as e:
             print(f"Request timed out: {e}")
-            message.error(request,"Request timed out while processing your request.")
+            messages.error(request,"Request timed out while processing your request.")
             return redirect('home')
 
         except requests.exceptions.TooManyRedirects as e:
             print(f"Too many redirects: {e}")
-            message.error(request,"Too many redirects occured while processing your request.")
+            messages.error(request,"Too many redirects occured while processing your request.")
             return redirect('home')
 
         except requests.exceptions.SSLError as e:
             print(f"SSL certificate error occurred: {e}")
-            message.error(request,"SSL certificate error occurred while processing your request.")
+            messages.error(request,"SSL certificate error occurred while processing your request.")
             return redirect('home')
                 
         except Exception as e:
             print(e)
             print("An error occured on check info url response.")
-            message.error(request,"An error occured on check info url response.")
+            messages.error(request,"An error occured on check info url response.")
             return redirect('home') 
             
         time.sleep(2)
@@ -431,38 +431,38 @@ def generate_qr(request,instance_id):
             print(qrcode)
         except requests.exceptions.RequestException as e:
             print("An error occurred while processing your request.")
-            message.error(request,"An error occurred while processing your request.")
+            messages.error(request,"An error occurred while processing your request.")
             return redirect('home')
 
         except requests.exceptions.HTTPError as e:
             print(f"HTTP error occurred: {e}")
-            message.error(request,"HTTP error occurred while processing your request.")
+            messages.error(request,"HTTP error occurred while processing your request.")
             return redirect('home')
 
         except requests.exceptions.ConnectionError as e:
             print(f"Connection error occurred: {e}")
-            message.error(request,"Connection error occurred while processing your request.")
+            messages.error(request,"Connection error occurred while processing your request.")
             return redirect('home')
 
         except requests.exceptions.Timeout as e:
             print(f"Request timed out: {e}")
-            message.error(request,"Request timed out while processing your request.")
+            messages.error(request,"Request timed out while processing your request.")
             return redirect('home')
 
         except requests.exceptions.TooManyRedirects as e:
             print(f"Too many redirects: {e}")
-            message.error(request,"Too many redirects occured while processing your request.")
+            messages.error(request,"Too many redirects occured while processing your request.")
             return redirect('home')
 
         except requests.exceptions.SSLError as e:
             print(f"SSL certificate error occurred: {e}")
-            message.error(request,"SSL certificate error occurred while processing your request.")
+            messages.error(request,"SSL certificate error occurred while processing your request.")
             return redirect('home')
                 
         except Exception as e:
             print(e)
             print("An error occured on check info url response.")
-            message.error(request,"An error occured on check info url response.")
+            messages.error(request,"An error occured on check info url response.")
             return redirect('home') 
         
         

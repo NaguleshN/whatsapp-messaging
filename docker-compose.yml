@@ -76,7 +76,6 @@ services:
       - WEBHOOK_BASE64=${WEBHOOK_BASE64}
     volumes:
       - ./:/home/node/app
-      - /home/node/app/node_modules/
 volumes:
   db:
   whatsapp_web:
