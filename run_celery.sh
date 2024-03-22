@@ -1,0 +1,1 @@
+celery -A whatsapp worker -B -l info --autoscale=10,1

@@ -1,0 +1,82 @@
+version: '3'
+
+services:
+  web:
+    container_name: whatsapp_web
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh '/app/run_web.sh'
+    ports:
+      - '8001:8000'
+    expose:
+      - '8001'
+    volumes:
+      - whatsapp_web:/app/media/
+
+  worker:
+    container_name: whatsapp_worker
+    build: .
+    restart: always
+    command: sh '/app/run_celery.sh'
+    env_file:
+      - .env
+    links:
+      - redis:redis
+    volumes:
+      - whatsapp_web:/app/media
+
+  redis:
+    container_name: whatsapp_redis
+    restart: always
+    image: redis:latest
+    ports:
+      - 8002:6379
+
+  flower:
+    container_name: whatsapp_flower
+    restart: always
+    command: sh '/app/run_flower.sh'
+    build: .
+    ports:
+      - 8003:5555
+    links:
+      - redis:redis
+
+  mongodb:
+    container_name: whatsapp_api_mongodb
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    volumes:
+      - db:/data/db
+
+  app:
+    container_name: whatsapp_api
+    build:
+      context: .
+      dockerfile: Dockerfile-api
+      args:
+        - PORT=${PORT}
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - TOKEN=${TOKEN}
+      - PORT=${PORT}
+      - MONGODB_ENABLED=${MONGODB_ENABLED}
+      - MONGODB_URL=mongodb://mongodb:27017
+      - WEBHOOK_ENABLED=${WEBHOOK_ENABLED}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - WEBHOOK_BASE64=${WEBHOOK_BASE64}
+    volumes:
+      - ./:/home/node/app
+      - /home/node/app/node_modules/
+volumes:
+  db:
+  whatsapp_web:

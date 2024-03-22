@@ -1,0 +1,17 @@
+FROM node:19-alpine
+
+RUN mkdir /api-app
+WORKDIR /api-app
+ARG PORT=3333
+
+USER root
+RUN apk add git
+
+WORKDIR /api-app
+COPY ./whatsapp-api /api-app
+RUN yarn install
+
+USER node
+EXPOSE ${PORT}
+
+CMD yarn start
