@@ -92,8 +92,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
 let key = "{{instance_key}}";
 let token="Instance token";
-let init_url ="http://localhost:3333/instance/init?key="+key+"&token="+token;
-let img_url="http://localhost:3333/instance/qrbase64?key="+key ;
+
+{% if production == true %}
+    let init_url ="http://localhost:3333/instance/init?key="+key+"&token="+token;
+    let img_url="http://localhost:3333/instance/qrbase64?key="+key ;
+{% else %}
+    let init_url ="http://10.1.76.125:8801/instance/init?key="+key+"&token="+token;
+    let img_url="http://10.1.76.125:8801/instance/qrbase64?key="+key ;
+{% endif %}
+
 console.log(img_url)
 console.log(init_url)
 
@@ -135,8 +142,11 @@ setInterval(imageResponse, 20000);
 
 
 
-
-const check_url="http://localhost:3333/instance/info?key="+key ;
+{% if production == true %}
+    const check_url="http://localhost:3333/instance/info?key="+key ;
+{% else %}
+    const check_url="http://10.1.76.125:8801/instance/info?key="+key ;
+{% endif %}
 
 async function checkResponse(){
     try{

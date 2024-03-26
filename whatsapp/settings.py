@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,11 +25,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ui(l^1lx$&bve0gi0&-ns^ps@2_3&*6o$%x=hu1)55daf(j4p5'
 
+os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+if os.getenv('PRODUCTION') == 'True':
+    DEBUG = False
+else :
+    DEBUG = True
+    
+    
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -135,8 +141,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='login'
-
-CELERY_BROKER_URL = "redis://localhost:6379"
+if os.getenv('PRODUCTION') == 'True':
+    CELERY_BROKER_URL="redis://localhost:6379/0"
+else:
+    CELERY_BROKER_URL = "redis://localhost:6379"
 # CELERY_RESULT_BACKEND = "redis://localhost:6379"
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_RESULT_SERIALIZER='json'
@@ -154,8 +162,10 @@ MEDIA_URL  = '/media/'
 SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 
 
-# BASE_URL="http://10.1.76.125:7708"
-# BASE_URL="http://10.1.76.125:8801"
-BASE_URL="http://whatsapp_api:3333"
+if os.getenv('PRODUCTION') == 'True':
+    BASE_URL="http://whatsapp_api:3333"
+else:
+    BASE_URL="http://10.1.76.125:8801"
 
-SAMPLE_EXCEL_PATH= "C://Users/nagul/Desktop/projects/whatsapp/media/Sample_excel.xlsx"
+
+SAMPLE_EXCEL_PATH= "/whatsapp/media/Sample_excel.xlsx"

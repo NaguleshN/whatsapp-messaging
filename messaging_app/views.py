@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render
 from messaging_app.urls import path
 from django.contrib.auth.models import User,auth
@@ -28,7 +29,7 @@ def login(request):
     if request.method=="POST":
         username=request.POST.get('username')
         if username is None:
-        
+            
             error_message = "Username is not provided."
             messages.error(error_message)
             print(ve)
@@ -59,9 +60,9 @@ def login(request):
 
 @login_required(login_url='login')
 def home(request):
-
+    
     if request.method=="POST":
- 
+     
         instance_name = request.POST.get('instance_name')
         if instance_name is None:
             messages.error("Instance name is not provided.")
@@ -483,7 +484,11 @@ def generate_qr(request,instance_id):
 
             if not user_data:
                 print("User data is empty.")
-                return render(request,"qr2.html",{"instance_id":instance_id,"instance_key":instance.instance_key})
+                if os.getenv('PRODUCTION'):
+                    production =True
+                else:
+                    production=False
+                return render(request,"qr2.html",{"instance_id":instance_id,"instance_key":instance.instance_key,"production":production})
             else:
                 print("User data is not empty.")
 
@@ -520,4 +525,9 @@ def generate_qr(request,instance_id):
         print("An error occurred while processing the request.")
         print(e)
         return redirect('home')
+    if os.getenv('PRODUCTION'):
+        production =True
+    else:
+        production=False
+    return render(request,"qr2.html",{"instance_id":instance_id,"instance_key":instance.instance_key,"production":production})
 
