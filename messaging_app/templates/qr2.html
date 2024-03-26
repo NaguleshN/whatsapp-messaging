@@ -117,6 +117,9 @@ async function imageResponse(){
             redirect:"follow",
         })
         console.log(imgResponse)
+
+
+        
         const imgBody = await imgResponse.text();
         console.log("Body content:", imgBody);
         let jsonBodyObj=JSON.parse(imgBody);
