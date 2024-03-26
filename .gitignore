@@ -4,6 +4,8 @@
 *.pyc
 __pycache__/
 local_settings.py
+uploads
+db.sqlite3
 
 # Python # 
 *.py[cod] 

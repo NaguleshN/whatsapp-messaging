@@ -5,6 +5,14 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+from django.contrib.auth.models import User
+
+def create_superuser(apps, schema_editor):
+    User.objects.create_superuser(username='iqube', email='iqubekct@gmail.com', password='iqube')
+    User.objects.create_user(username='iqube1', email='iqubekct@gmail.com', password='iqube1')
+
+
+
 class Migration(migrations.Migration):
 
     initial = True
@@ -48,4 +56,5 @@ class Migration(migrations.Migration):
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
+        migrations.RunPython(create_superuser),
     ]

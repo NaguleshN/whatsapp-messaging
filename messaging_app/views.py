@@ -274,6 +274,9 @@ def messaging(request,instance_id):
             return redirect("home")
 
         try:
+            print(instance_id)
+            print(file_path)
+            print(new_log.id)
             send_message.delay(file_path, instance_id,new_log.id)
             messages.success(request,"Request sent successfully.")
         except Exception as e:
